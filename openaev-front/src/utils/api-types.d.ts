@@ -5727,6 +5727,7 @@ export interface PlatformSettings {
     | "MULTI_TENANCY"
     | "SENTINEL_ONE_EXECUTOR"
     | "PALO_ALTO_CORTEX_EXECUTOR"
+    | "OPENAEV_TRIALS_XTMHUB"
   )[];
   /** True if the Tanium Executor is enabled */
   executor_tanium_enable?: boolean;
@@ -7847,6 +7848,14 @@ export interface XtmComposerRegisterInput {
 export interface XtmComposerUpdateStatusInput {
   /** The connector instance current status */
   connector_instance_current_status: "started" | "stopped";
+}
+
+export interface XtmHubContactUsInput {
+  /**
+   * The message sent
+   * @minLength 1
+   */
+  message: string;
 }
 
 export interface XtmHubRegisterInput {
