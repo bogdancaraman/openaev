@@ -1379,6 +1379,7 @@ export interface CreateExerciseInput {
   exercise_category?: string;
   exercise_custom_dashboard?: string;
   exercise_description?: string;
+  exercise_is_chaining?: boolean;
   /** @format email */
   exercise_mail_from?: string;
   exercise_mails_reply_to?: string[];
@@ -5775,6 +5776,7 @@ export interface PlatformSettings {
     | "SENTINEL_ONE_EXECUTOR"
     | "PALO_ALTO_CORTEX_EXECUTOR"
     | "OPENAEV_TRIALS_XTMHUB"
+    | "INJECT_CHAINING"
   )[];
   /** True if the Tanium Executor is enabled */
   executor_tanium_enable?: boolean;
@@ -7243,6 +7245,7 @@ export interface UpdateExerciseInput {
   exercise_category?: string;
   exercise_custom_dashboard?: string;
   exercise_description?: string;
+  exercise_is_chaining?: boolean;
   /** @format email */
   exercise_mail_from?: string;
   exercise_mails_reply_to?: string[];
