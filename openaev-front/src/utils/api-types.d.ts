@@ -7009,6 +7009,8 @@ export interface ScenarioOutput {
    * @format int64
    */
   scenario_users_number?: number;
+  /** Workflow ID associated with the scenario */
+  scenario_workflow_id?: string;
 }
 
 export interface ScenarioRecurrenceInput {
@@ -7218,6 +7220,7 @@ export interface SimulationDetails {
   exercise_users?: string[];
   /** @format int64 */
   exercise_users_number?: number;
+  exercise_workflow_id?: string;
 }
 
 export interface SimulationsResultsLatest {
