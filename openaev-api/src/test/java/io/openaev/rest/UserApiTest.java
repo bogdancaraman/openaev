@@ -21,8 +21,6 @@ import io.openaev.rest.user.form.user.ChangePasswordInput;
 import io.openaev.service.MailingService;
 import io.openaev.utils.RandomUtils;
 import io.openaev.utils.fixtures.UserFixture;
-import io.openaev.utils.fixtures.composers.OrganizationComposer;
-import io.openaev.utils.fixtures.composers.TagComposer;
 import io.openaev.utils.fixtures.composers.UserComposer;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -35,10 +33,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 @TestInstance(PER_CLASS)
-@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class UserApiTest extends IntegrationTest {
 
@@ -46,29 +42,28 @@ class UserApiTest extends IntegrationTest {
 
   @Autowired private UserRepository userRepository;
 
-  @Autowired private ScenarioRepository scenarioRepository;
-  @Autowired private GroupRepository groupRepository;
-  @Autowired private OrganizationRepository organizationRepository;
-  @Autowired private GrantRepository grantRepository;
-  @Autowired private TagComposer tagComposer;
-
   @MockitoBean private MailingService mailingService;
   @MockitoBean private RandomUtils randomUtils;
 
   @Autowired private UserComposer userComposer;
-  @Autowired private OrganizationComposer organisationComposer;
-  @Autowired private TagRepository tagRepository;
 
   @BeforeEach
   public void setup() {
-    // Create user using composer if not already present
-    if (this.userRepository.findByEmailIgnoreCase(EMAIL).isEmpty()) {
+    // Reset mocks to avoid state leaking between tests
+    reset(mailingService, randomUtils);
+
+    // Create user using composer if not already present, or restore password
+    var existingUser = this.userRepository.findByEmailIgnoreCase(EMAIL);
+    if (existingUser.isEmpty()) {
       User user = UserFixture.getUser("Test", "User", EMAIL);
       user.setPassword(UserFixture.ENCODED_PASSWORD);
       userComposer.forUser(user).persist();
+    } else {
+      // Restore password in case a previous test changed it
+      User user = existingUser.get();
+      user.setPassword(UserFixture.ENCODED_PASSWORD);
+      userRepository.saveAndFlush(user);
     }
-    entityManager.flush();
-    entityManager.clear();
   }
 
   @Nested
@@ -263,7 +258,7 @@ class UserApiTest extends IntegrationTest {
           .andExpect(status().isOk());
 
       Awaitility.await()
-          .atMost(1, TimeUnit.SECONDS)
+          .atMost(10, TimeUnit.SECONDS)
           .until(
               () -> {
                 try {

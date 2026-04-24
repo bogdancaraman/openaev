@@ -114,7 +114,10 @@ public class XtmHubApiTest extends IntegrationTest {
         "Registration should exist before unregister");
 
     // When
-    mvc.perform(put(XtmHubApi.XTMHUB_URI + "/unregister").contentType(MediaType.APPLICATION_JSON))
+    mvc.perform(
+            put(XtmHubApi.XTMHUB_URI + "/unregister")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is2xxSuccessful());
 
     // Then: entity must be gone

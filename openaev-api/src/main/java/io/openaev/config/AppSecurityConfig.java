@@ -91,7 +91,7 @@ public class AppSecurityConfig {
                     .permitAll()
                     .requestMatchers(TENANT_PLAYER_URI)
                     .permitAll()
-                    .requestMatchers("/api/settings")
+                    .requestMatchers("/api/settings/public")
                     .permitAll()
                     // TODO multi-tenancy to delete after the multi tenancy upgrade
                     .requestMatchers("/api/agent/**")

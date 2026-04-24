@@ -40,9 +40,11 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Async;
@@ -95,6 +97,11 @@ public class UserService {
   private Cache adminCache;
 
   // -- COUNT --
+
+  @Autowired
+  public void setMailingService(@Lazy MailingService mailingService) {
+    this.mailingService = mailingService;
+  }
 
   /**
    * Returns the total count of users in the system.
@@ -289,8 +296,7 @@ public class UserService {
     String userId = null;
     synchronized (resetTokenMap) {
       for (Map.Entry<String, String> entry : resetTokenMap.entrySet()) {
-        // Use token.equals() to handle null values from expired entries in PassiveExpiringMap
-        if (token.equals(entry.getValue())) {
+        if (entry.getValue().equals(token)) {
           userId = entry.getKey(); // don't break out
         }
       }
