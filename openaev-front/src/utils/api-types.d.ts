@@ -2747,6 +2747,11 @@ export interface EvaluationInput {
   evaluation_score?: number;
 }
 
+export interface Event {
+  /** @minLength 1 */
+  stix_objects: string;
+}
+
 export interface EventInput {
   /** @minItems 1 */
   event_conditions: ConditionCreateInput[];
@@ -2771,10 +2776,6 @@ export interface EventOutput {
   event_updated_at?: string;
   /** @minLength 1 */
   event_workflow_id: string;
-}
-
-export interface Event {
-  stix_objects: string;
 }
 
 export interface Executable {
@@ -4525,6 +4526,7 @@ export interface InjectsImportTestInput {
 }
 
 export interface Internal {
+  /** @minLength 1 */
   work_id: string;
 }
 
