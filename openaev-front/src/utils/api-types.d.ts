@@ -708,6 +708,11 @@ export interface BrokerConnectionInfo {
   vhost?: string;
 }
 
+export interface CTIEvent {
+  event: Event;
+  internal: Internal;
+}
+
 export interface CVEBulkInsertInput {
   cves: CveCreateInput[];
   initial_dataset_completed?: boolean;
@@ -2768,6 +2773,10 @@ export interface EventOutput {
   event_workflow_id: string;
 }
 
+export interface Event {
+  stix_objects: string;
+}
+
 export interface Executable {
   executable_file: string;
   listened?: boolean;
@@ -4513,6 +4522,10 @@ export interface InjectsImportTestInput {
   sheet_name: string;
   /** @format int32 */
   timezone_offset: number;
+}
+
+export interface Internal {
+  work_id: string;
 }
 
 export interface JsonApiDocumentResourceObject {
