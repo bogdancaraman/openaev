@@ -1,0 +1,40 @@
+name: Sync fork safely
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sync fork safely
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git clone https://x-access-token:${TOKEN}@github.com/bogdancaraman/openaev.git
+          cd openaev
+
+          # Correct upstream (FIXED)
+          git remote add upstream https://github.com/OpenAEV-Platform/openaev.git
+
+          # Fetch updates
+          git fetch upstream
+
+          # Branch (OpenAEV uses main)
+          git checkout main
+
+          # Git identity
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          # Merge safely
+          git merge upstream/main --no-edit || echo "Already up to date"
+
+          # Push back to your fork
+          git push origin main
